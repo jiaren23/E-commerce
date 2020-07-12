@@ -9,7 +9,8 @@ export default new Router({
     {
       path: '/',
       name: 'HelloWorld',
-      component: HelloWorld
+      component: HelloWorld,
+      meta: { requiresAuth: true } // 導航守衛的 路由訊息
     },
     {
       path: '/login',  // 虛擬 path  一般建議打小寫
@@ -18,3 +19,6 @@ export default new Router({
     }
   ]
 })
+
+
+
