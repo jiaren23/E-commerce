@@ -7,6 +7,10 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
+      path: '*',
+      redirect: 'login' // 避免用亂打進入不存在的頁面 , 就導回 登入頁
+    },
+    {
       path: '/',
       name: 'HelloWorld',
       component: HelloWorld,
