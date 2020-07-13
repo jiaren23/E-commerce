@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Index from '@/components/Index';
+// import Index from '@/components/Index';
 import Login from '@/components/pages/Login';
 import Dashboard from '@/components/Dashboard';
 import Products from '@/components/pages/Products';
@@ -14,12 +14,12 @@ export default new Router({
       path: '*', 
       redirect: 'login'             // 避免用亂打進入不存在的頁面 , 就導回 登入頁
     },
-    {
-      path: '/',
-      name: 'Index',
-      component: Index,
-      meta: { requiresAuth: true } // 導航守衛的 路由訊息
-    },
+    // {
+    //   path: '/',
+    //   name: 'Index',
+    //   component: Index,
+    //   meta: { requiresAuth: true } // 導航守衛的 路由訊息
+    // },
     {
       path: '/login',              // 虛擬 path  一般建議打小寫
       name: 'Login', 

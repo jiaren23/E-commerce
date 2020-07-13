@@ -20,7 +20,7 @@ export default {
         this.$http.post(api).then(response => { // 然後 使用 post 傳入用戶資料  vm.user
         console.log(response.data);
         if (response.data.success){ // 這裡寫一個判別式 : 如果登出成功 就將路徑 轉到我們登入頁面
-            vm.$router.push('/Login') 
+            vm.$router.push('/login') 
         }
         });
     }

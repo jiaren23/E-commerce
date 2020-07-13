@@ -49,7 +49,7 @@
           this.$http.post(api , vm.user).then(response => {  // 然後 使用 post 傳入用戶資料  vm.user
           console.log(response.data);
           if (response.data.success){     // 這裡寫一個判別式 : 如果等入成功 就將路徑 轉到我們的首頁
-              vm.$router.push('/') 
+              vm.$router.push('/admin/products') 
           }
           });
         }
