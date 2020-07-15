@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="text-right mt-4">
+      <loading :active.sync="isLoading"> </loading>
       <button 
         class="btn btn-primary"
         @click="openModal(true)">建立新產品</button> <!-- 這裡用 true 參數帶入 判定是 新增 -->
@@ -66,7 +67,9 @@
                 </div>
                 <div class="form-group">
                   <label for="customFile">或 上傳圖片
-                    <i class="fas fa-spinner fa-spin"></i>
+                    <i 
+                      class="fas fa-spinner fa-spin"
+                      v-if="status.fileUploading"></i>
                   </label>
                   <input 
                     type="file" 
@@ -215,6 +218,11 @@ export default {
       products: [], // 所有新增的產品資料會放進這裡
       tempProduct:{}, // for modal  這裡會存放要送到資料庫 產品資料(透過 post 方法) 
       isNew : false,
+      isLoading : false, // loading 畫面 啟用與否
+      status:{
+        fileUploading : false,
+
+      }
     };
   },
   methods: {
@@ -222,8 +230,10 @@ export default {
       // 取得遠端產品資料 然後將 ajax取得的資料存進 data 的products
       const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products`; // API 伺服器路近 + 遠端的自己申請的 api 路徑
       const vm = this;
+      vm.isLoading = true;
       this.$http.get(api).then(response => {
         console.log(response.data);
+        vm.isLoading = false;
         vm.products = response.data.products;       // 將取得的產品資訊塞進 products 給予template 做渲染
       });
     },
@@ -262,19 +272,22 @@ export default {
       const uploadedFile = this.$refs.files.files[0];    // 要傳入的圖片 
       const vm = this;
       const formData = new FormData(); // 透過 JS 先準備一個 Form 單
-      formData.append( 'file-to-upload', uploadedFile )  // 再用 append 把欄位新增進去 form 裡面 , 後方參數就是要傳入的檔案
+      formData.append( 'file-to-upload', uploadedFile )  // 再用 append 把欄位新增進去 form 裡面s , 後方參數就是要傳入的檔案
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/upload`;// 定義路徑
+      vm.status.fileUploading = true ;
       // 以下 post 內容 ( 路徑 , 剛組好的 formData  , 調整好格式的 FormData 物件 )
       this.$http.post( url , formData , {
         headers:{                                        // 將表單形式改成 FormData
           'Content-Type' : 'multipart/data'              // multipart/data 屬性使用於 我們的表單 具有 檔案上傳控制的 需求
         }
       }).then((response)=>{
-          console.log(response.data)
-           if(response.data.success){
-             // 以下 set 內容 ( 此欄位要塞進哪裡 , 此欄位名稱  , 要寫入的路徑 )
-              vm.$set(vm.tempProduct, 'imageUrl', response.data.imageUrl); // 使用 set 強制寫入 才有 雙向綁定功能 
-              console.log(vm.tempProduct)
+          console.log(response.data)  
+          vm.status.fileUploading = false ;
+           if(response.data.success){            
+             // vm.tempProduct.imageUrl = response.data.imageUrl;  // 此作法會讓 建立新產品的 圖片位置無法正確雙向綁定 因此要採用以下 set 做法
+             // 以下 set 內容 ( 此欄位要塞進哪裡 , 此欄位名稱  , 要寫入的路徑 ) 
+             vm.$set(vm.tempProduct, 'imageUrl', response.data.imageUrl); // 使用 set 強制寫入 才有 雙向綁定功能 
+             console.log(vm.tempProduct)
           }
         })
     }
