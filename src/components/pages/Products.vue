@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div 
-      class="text-right mt-4" 
-      @click="openModal(true)">
-      <button class="btn btn-primary">建立新產品</button>
+    <div class="text-right mt-4">
+      <button 
+        class="btn btn-primary"
+        @click="openModal(true)">建立新產品</button> <!-- 這裡用 true 參數帶入 判定是 新增 -->
     </div>
     <table class="table mt-4">
       <thead>
@@ -34,7 +34,7 @@
           <td>
             <button 
               class="btn btn-outline-primary btn-sm"
-              @click="openModal(false, item)">編輯</button>
+              @click="openModal(false, item)">編輯</button> <!-- 這裡用 false 參數帶入 判定是 編輯 -->
           </td>
         </tr>
       </tbody>
@@ -68,8 +68,12 @@
                   <label for="customFile">或 上傳圖片
                     <i class="fas fa-spinner fa-spin"></i>
                   </label>
-                  <input type="file" id="customFile" class="form-control"
-                    ref="files">
+                  <input 
+                    type="file" 
+                    id="customFile" 
+                    class="form-control"
+                    ref="files"
+                    @change="uploadFile"> <!-- 上傳圖片 -->
                 </div>
                 <img 
                   img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
@@ -224,7 +228,6 @@ export default {
       });
     },
     openModal(isNew,item){                          // 新增 參數 ( 是否是新的 , item(原有的 item) )
-      
       if(isNew){                                    // 如果是新增的時候 tempProduct就是一個空物件
         this.tempProduct = {};
         this.isNew = true;
@@ -233,7 +236,6 @@ export default {
         this.isNew = false;                         // 所以使用 assign 可以先將 item 傳到一個空物件 在賦予 到 tempProduct
       }
       $('#productModal').modal('show')              // bs 提供給予控制 modal 的 methods
-
     },
     updateProduct(){
       let api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product`; // API 伺服器路近 + 遠端的自己申請的 api 路徑
@@ -254,6 +256,27 @@ export default {
           console.log("產品建立失敗")
         }
       });
+    },
+    uploadFile(){
+      console.log(this)
+      const uploadedFile = this.$refs.files.files[0];    // 要傳入的圖片 
+      const vm = this;
+      const formData = new FormData(); // 透過 JS 先準備一個 Form 單
+      formData.append( 'file-to-upload', uploadedFile )  // 再用 append 把欄位新增進去 form 裡面 , 後方參數就是要傳入的檔案
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/upload`;// 定義路徑
+      // 以下 post 內容 ( 路徑 , 剛組好的 formData  , 調整好格式的 FormData 物件 )
+      this.$http.post( url , formData , {
+        headers:{                                        // 將表單形式改成 FormData
+          'Content-Type' : 'multipart/data'              // multipart/data 屬性使用於 我們的表單 具有 檔案上傳控制的 需求
+        }
+      }).then((response)=>{
+          console.log(response.data)
+           if(response.data.success){
+             // 以下 set 內容 ( 此欄位要塞進哪裡 , 此欄位名稱  , 要寫入的路徑 )
+              vm.$set(vm.tempProduct, 'imageUrl', response.data.imageUrl); // 使用 set 強制寫入 才有 雙向綁定功能 
+              console.log(vm.tempProduct)
+          }
+        })
     }
   },
   created() {
