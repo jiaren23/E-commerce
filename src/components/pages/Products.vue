@@ -15,6 +15,7 @@
         <th width="120">售價</th>
         <th width="80">狀態</th>
         <th width="80">編輯</th>
+        <th width="80">刪除</th>
       </thead>
       <tbody>
         <tr 
@@ -36,6 +37,11 @@
             <button 
               class="btn btn-outline-primary btn-sm"
               @click="openModal(false, item)">編輯</button> <!-- 這裡用 false 參數帶入 判定是 編輯 -->
+          </td>
+           <td>
+            <button 
+              class="btn btn-outline-danger btn-sm"
+                @click="openDelProductModal(item)">刪除</button>
           </td>
         </tr>
       </tbody>
@@ -62,7 +68,7 @@
                     type="text" 
                     class="form-control" 
                     id="image"
-                    placeholder="請輸入圖片連結"
+                    placeholder="請輸入圖片連結"  
                     v-model="tempProduct.imageUrl"> <!---->
                 </div>
                 <div class="form-group">
@@ -200,7 +206,10 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-danger"
+            <button 
+              type="button" 
+              class="btn btn-danger"
+              @click="delProduct"
               >確認刪除</button>
           </div>
         </div>
@@ -267,6 +276,25 @@ export default {
         }
       });
     },
+
+    openDelProductModal(item) {
+      const vm = this;
+      $('#delProductModal').modal('show');
+      vm.tempProduct = Object.assign({}, item);
+    },
+    delProduct() {
+      const vm = this;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
+      this.$http.delete(url).then((response) => {
+        console.log(response, vm.tempProduct);
+        $('#delProductModal').modal('hide');
+        vm.isLoading = false;
+        this.getProducts();
+      });
+    },
+
+
+
     uploadFile(){
       console.log(this)
       const uploadedFile = this.$refs.files.files[0];    // 要傳入的圖片 
@@ -298,4 +326,10 @@ export default {
 };
 </script>
 
+
+<style>
+  .bg-danger{
+    background-color: #EEE !important;
+  }
+</style>
 
