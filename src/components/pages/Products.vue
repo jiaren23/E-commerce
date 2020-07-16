@@ -46,6 +46,47 @@
         </tr>
       </tbody>
     </table>
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li 
+          class="page-item"
+          :class="{'disabled':pagination.has_pre === false}">
+            <a 
+              class="page-link" 
+              href="#" 
+              aria-label="Previous"
+              @click.prevent="getProducts(pagination.current_page - 1)">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        <li 
+          class="page-item"
+          v-for="page in pagination.total_pages" 
+          :key="page"
+          :class="{'active': pagination.current_page === page}" >
+            <a 
+              class="page-link" 
+              href="#"
+              @click.prevent="getProducts(page)">{{page}}</a>
+        </li>
+        <li 
+          class="page-item"
+          :class="{'disabled':pagination. has_next=== false}">
+            <a 
+              class="page-link" 
+              href="#" 
+              aria-label="Next"
+               @click.prevent="getProducts(pagination.current_page + 1)">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+      </ul>
+    </nav>
+
+
     <!-- Modal -->
     <div class="modal fade" id="productModal" tabindex="-1" role="dialog"
       aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -231,19 +272,21 @@ export default {
       status:{
         fileUploading : false,
 
-      }
+      },
+      pagination:{},
     };
   },
   methods: {
-    getProducts() {
+    getProducts(page = 1) { //給予page 預設值是 1   如果有代數值就使用自代數值 , 沒有則帶入第一頁
       // 取得遠端產品資料 然後將 ajax取得的資料存進 data 的products
-      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products`; // API 伺服器路近 + 遠端的自己申請的 api 路徑
+      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products?page=${page}`; // API 伺服器路近 + 遠端的自己申請的 api 路徑
       const vm = this;
       vm.isLoading = true;
       this.$http.get(api).then(response => {
         console.log(response.data);
         vm.isLoading = false;
         vm.products = response.data.products;       // 將取得的產品資訊塞進 products 給予template 做渲染
+        vm.pagination = response.data.pagination;   // pagination
       });
     },
     openModal(isNew,item){                          // 新增 參數 ( 是否是新的 , item(原有的 item) )

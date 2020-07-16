@@ -16,11 +16,11 @@ export default {
   name: 'Navbar',
   data() {
     return {
-      messages: [{
+      messages: [
         // message :'訊息內容', 
         // status :'danger', // bs 樣式
         // timestamp :123,
-      }],
+      ],
     };
   },
   // 每當送訊息到 上方 data 的 mes 裡面時 就會觸發函式 將 自己移除的函式
@@ -58,7 +58,7 @@ export default {
     vm.$bus.$on('message:push', (message, status = 'warning') => { // 這裡是直接呼叫 Vue 實體下的 bus , 並使用 on 註冊一個 mes : push 的方法
       vm.updateMessage(message, status);  // 最後在觸發 更新 mes
     });
-    vm.$bus.$emit('message:push');
+    // vm.$bus.$emit('message:push');
   },
 };
 </script>
