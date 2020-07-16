@@ -9,12 +9,13 @@ import 'vue-loading-overlay/dist/vue-loading.css';  // Import stylesheet
 import App from './App';
 import router from './router';
 import "./bus";
+import currencyFilter from './filters/currency';
 
 Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
 
 Vue.component('Loading' , Loading) // 使用全域方式啟用 (這樣在每個不同地方就就不需要依依載入)
-
+Vue.filter('currency',currencyFilter) 
 
 axios.defaults.withCredentials = true;
 

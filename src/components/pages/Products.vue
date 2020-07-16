@@ -24,11 +24,15 @@
           <td>{{item.category}}</td>
           <td>{{item.title}}</td>
           <td>{{item.num}}</td>
-          <td class="text-right">{{item.origin_price}}</td>
-          <td class="text-right">{{item.price}}</td>
+          <td class="text-right">
+              {{item.origin_price | currency}}
+          </td>
+          <td class="text-right">
+              {{item.price | currency}}
+          </td>
           <td>
             <span 
-              v-if="item.is_enable" 
+              v-if="item.is_enabled" 
               class="text-success">啟用</span>
             <span 
               v-else>未啟用</span>
@@ -277,7 +281,7 @@ export default {
     };
   },
   methods: {
-    getProducts(page = 1) { //給予page 預設值是 1   如果有代數值就使用自代數值 , 沒有則帶入第一頁
+    getProducts(page = 1) {                         //給予page 預設值是 1   如果有代數值就使用自代數值 , 沒有則帶入第一頁
       // 取得遠端產品資料 然後將 ajax取得的資料存進 data 的products
       const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/products?page=${page}`; // API 伺服器路近 + 遠端的自己申請的 api 路徑
       const vm = this;
