@@ -41,7 +41,7 @@
            <td>
             <button 
               class="btn btn-outline-danger btn-sm"
-                @click="openDelProductModal(item)">刪除</button>
+              @click="openDelProductModal(item)">刪除</button>
           </td>
         </tr>
       </tbody>
@@ -292,9 +292,6 @@ export default {
         this.getProducts();
       });
     },
-
-
-
     uploadFile(){
       console.log(this)
       const uploadedFile = this.$refs.files.files[0];    // 要傳入的圖片 
@@ -316,7 +313,9 @@ export default {
              // 以下 set 內容 ( 此欄位要塞進哪裡 , 此欄位名稱  , 要寫入的路徑 ) 
              vm.$set(vm.tempProduct, 'imageUrl', response.data.imageUrl); // 使用 set 強制寫入 才有 雙向綁定功能 
              console.log(vm.tempProduct)
-          }
+            }else{
+                  this.$bus.$emit('message:push',response.data.message,'danger'); // 如果檔案有誤 跳錯誤訊息
+            }
         })
     }
   },
@@ -325,7 +324,6 @@ export default {
   }
 };
 </script>
-
 
 <style>
   .bg-danger{
