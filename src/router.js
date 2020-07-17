@@ -5,6 +5,8 @@ import Router from 'vue-router';
 import Login from '@/components/pages/Login';
 import Dashboard from '@/components/Dashboard';
 import Products from '@/components/pages/Products';
+import CustomerOrder from '@/components/pages/CustomerOrder';
+
 
 Vue.use(Router)
 
@@ -39,6 +41,18 @@ export default new Router({
           name: 'Products', 
           component: Products,   
           meta: { requiresAuth: true } , // 這裡一樣加上 確保進入此頁面前是需要被驗證的
+        },
+      ]
+    },
+    {
+      path: '/',
+      name: 'Dashboard',
+      component : Dashboard,
+      children : [
+        {
+          path: 'customer_order',              
+          name: 'CustomerOrder', 
+          component: CustomerOrder,   
         },
       ]
     }
