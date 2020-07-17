@@ -12,10 +12,7 @@
         </h6>
         <ul class="nav flex-column mb-2">
           <li class="nav-item">
-            <!-- <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              產品列表
-            </a> -->
+            <!-- <a class="nav-link" href="#"><span data-feather="file-text"></span>產品列表</a> -->
             <router-link 
               to="/admin/products"
               class="nav-link">
@@ -33,10 +30,7 @@
         </h6>
         <ul class="nav flex-column mb-2">
           <li class="nav-item">
-            <!-- <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              模擬訂單
-            </a> -->
+            <!-- <a class="nav-link" href="#"><span data-feather="file-text"></span>模擬訂單</a> -->
              <router-link 
               to="/customer_order"
               class="nav-link">
