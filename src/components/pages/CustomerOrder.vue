@@ -140,11 +140,24 @@ export default {
         this.$http.post(url , {data : cart}).then((response) => {
          console.log(response);
          vm.status.loadingItem = '';             // 將原本的 vm.isLoading = false;   ** 改成 如果讀取完要改成 空的
+         vm.getCart();
+         $('#productModal').modal('hide');
+      });
+    },
+    getCart(){
+      const vm = this;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      vm.isLoading = true;
+      this.$http.get(url).then((response) => {
+        // vm.products = response.data.products;
+        console.log("取得購物車",response);
+        vm.isLoading = false;
       });
     }
   },
   created() {
     this.getProducts();
+    this.getCart();
   },
 }
 </script>  
