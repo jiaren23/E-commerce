@@ -10,7 +10,6 @@
       <thead>
         <th width="120">分類</th>
         <th>產品名稱</th>
-        <th width="120">數量</th>
         <th width="120">原價</th>
         <th width="120">售價</th>
         <th width="80">狀態</th>
@@ -23,7 +22,6 @@
           :key="item.id">
           <td>{{item.category}}</td>
           <td>{{item.title}}</td>
-          <td>{{item.num}}</td>
           <td class="text-right">
               {{item.origin_price | currency}}
           </td>

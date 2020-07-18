@@ -27,17 +27,20 @@
             <button 
               type="button" 
               class="btn btn-outline-secondary btn-sm"
-              @click="getProduct(item.id)">
+              @click="getProduct(item.id)">            
               <i 
                 class="fas fa-spinner fa-spin"
-                v-if="status.loadingItem === item.id" ></i> <!-- 如果 目前的 loading Id 和 item id 相符 才顯示此讀取效果  ( 解決原本全頁面都有 loading icon 的問題 ) -->
-              查看更多
+                v-if="status.loadingItem === item.id" ></i>  <!-- 如果 目前的 loading Id 和 item id 相符 才顯示此讀取效果  ( 解決原本全頁面都有 loading icon 的問題 ) -->
+                查看更多
             </button>
-            <button type="button" class="btn btn-outline-danger btn-sm ml-auto">
+            <button 
+              type="button" 
+              class="btn btn-outline-danger btn-sm ml-auto"
+              @click="addToCart(item.id)">
               <i 
                 class="fas fa-spinner fa-spin"
                 v-if="status.loadingItem === item.id"></i> <!-- 如果 目前的 loading Id 和 item id 相符 才顯示此讀取效果  ( 解決原本全頁面都有 loading icon 的問題 ) -->
-              加到購物車
+                加到購物車
             </button>
           </div>
         </div>
@@ -75,7 +78,10 @@
             <div class="text-muted text-nowrap mr-3">
               小計 <strong>{{ product.num * product.price }}</strong> 元
             </div>
-            <button type="button" class="btn btn-primary">
+            <button 
+              type="button" 
+              class="btn btn-primary"
+              @click="addToCart(product.id , product.num)">
               加到購物車
             </button>
           </div>
@@ -93,9 +99,9 @@ export default {
   data() {
       return {
         products: [],
-        product : {}, // 這裡是愈來存 modal 的資料
-        status:{      // 新增一狀態 判斷目前畫面是哪個  查看更多按鈕 正在讀取中 ( 解決原本全頁面都有 loading icon 的問題 )
-          loadingItem : ''
+        product : {},      // 這裡是用 來存 modal 的資料
+        status:{           // 新增一狀態 判斷目前畫面是哪個  查看更多按鈕 正在讀取中 ( 解決原本全頁面都有 loading icon 的問題 )
+          loadingItem : '' // 將會存放 點擊的產品 ID 
         },
         isLoading: false,
       }
@@ -107,24 +113,36 @@ export default {
       vm.isLoading = true;
       this.$http.get(url).then((response) => {
         vm.products = response.data.products;
-
         console.log(response);
         vm.isLoading = false;
       });
     },
-    getProduct(id) {  // 取得單一筆 資料 , 並且依照 API 需求要帶上 參數 id 
+    getProduct(id) {                              // 取得單一筆 資料 , 並且依照 API 需求要帶上 參數 id 
       const vm = this;
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${id}`;   // 多加 參數 id 
-        vm.status.loadingItem = id;// 將原本的 vm.isLoading = true; 改為由 id 決定是哪個 查看更多被觸發
+        vm.status.loadingItem = id;               // 將原本的 vm.isLoading = true;   ** 改為由 id 決定是哪個 查看更多被觸發
         this.$http.get(url).then((response) => {
           vm.product = response.data.product;
-           $('#productModal').modal('show');     // 啟用 modal
+          vm.product.num = 1 ;
+          $('#productModal').modal('show');       // 啟用 modal
           console.log(response);
-           vm.status.loadingItem = '';// 將原本的 vm.isLoading = false; 改成 如果讀取完要改成 空的
+          vm.status.loadingItem = '';             // 將原本的 vm.isLoading = false;   ** 改成 如果讀取完要改成 空的
       });
-    } 
+    } ,
+    addToCart(id , qty=1){ // 這裡將傳入裡參數 產品id、 數量(數量要給預設值 至少要 1 件)
+      const vm = this;
+        const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+        vm.status.loadingItem = id;               // 將原本的 vm.isLoading = true;   ** 改為由 id 決定是哪個 查看更多被觸發
+        const cart = {                            // 定義資料結構 , 將在下方的 post 做傳送到後端 (這裡便是要傳入的兩個參數)  
+              product_id : id ,
+              qty : qty,
+        }  
+        this.$http.post(url , {data : cart}).then((response) => {
+         console.log(response);
+         vm.status.loadingItem = '';             // 將原本的 vm.isLoading = false;   ** 改成 如果讀取完要改成 空的
+      });
+    }
   },
-
   created() {
     this.getProducts();
   },
