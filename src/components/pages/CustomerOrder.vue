@@ -89,7 +89,9 @@
       </div>
     </div>
 
-    <div class="my-5 row justify-content-center">
+    <div 
+      class="my-5 row justify-content-center" 
+      v-if="cart.total !== 0">    <!-- 這裡判斷如果都沒加進購物車 則 此表格隱藏 -->
       <div class="my-5 row justify-content-center">
         <table class="table">
           <thead>
@@ -99,9 +101,15 @@
             <th>單價</th>
           </thead>
           <tbody>
-            <tr v-for="item in cart.carts" :key="item.id" v-if="cart.carts">
+            <tr 
+              v-for="item in cart.carts" 
+              :key="item.id" 
+              v-if="cart.carts">
               <td class="align-middle">
-                <button type="button" class="btn btn-outline-danger btn-sm">
+                <button 
+                  type="button" 
+                  class="btn btn-outline-danger btn-sm"
+                  @click="removeCartItem(item.id)">
                   <i class="far fa-trash-alt"></i>
                 </button>
               </td>
@@ -170,7 +178,7 @@ export default {
           vm.status.loadingItem = '';             // 將原本的 vm.isLoading = false;   ** 改成 如果讀取完要改成 空的
       });
     } ,
-    addToCart(id , qty=1){ // 這裡將傳入裡參數 產品id、 數量(數量要給預設值 至少要 1 件)
+    addToCart(id , qty=1){                        // 這裡將傳入裡參數 產品id、 數量(數量要給預設值 至少要 1 件)
       const vm = this;
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
         vm.status.loadingItem = id;               // 將原本的 vm.isLoading = true;   ** 改為由 id 決定是哪個 查看更多被觸發
@@ -194,6 +202,16 @@ export default {
         // vm.products = response.data.products;
         console.log("取得購物車",response);
         vm.isLoading = false;
+      });
+    },
+    removeCartItem(id){
+      const vm = this;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart/${id}`;
+      vm.isLoading = true;
+      this.$http.delete(url).then((response) => {
+        vm.getCart();                                // 刪除後重新取得購物車內容
+        console.log("取得購物車",response);
+        vm.isLoading = false;                        // 然後關閉讀取 loading 畫面
       });
     }
   },
