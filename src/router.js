@@ -5,12 +5,15 @@ import Router from 'vue-router';
 import Login from '@/components/pages/Login';
 import Dashboard from '@/components/Dashboard';
 import Products from '@/components/pages/Products';
+import Coupons from '@/components/pages/Coupons';
+import Orders from '@/components/pages/Orders';
 import CustomerOrder from '@/components/pages/CustomerOrder';
 
 
 Vue.use(Router)
 
 export default new Router({
+  linkActiveClass: 'active',
   routes: [
     {
       path: '*', 
@@ -41,6 +44,18 @@ export default new Router({
           name: 'Products', 
           component: Products,   
           meta: { requiresAuth: true } , // 這裡一樣加上 確保進入此頁面前是需要被驗證的
+        },
+        {
+          path: 'coupons',
+          name: 'Coupons',
+          component: Coupons,
+          meta: { requiresAuth: true },
+        },
+        {
+          path: 'orders',
+          name: 'Orders',
+          component: Orders,
+          meta: { requiresAuth: true },
         },
       ]
     },

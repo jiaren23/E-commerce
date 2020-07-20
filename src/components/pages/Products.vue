@@ -49,7 +49,7 @@
       </tbody>
     </table>
 
-    <nav aria-label="Page navigation example">
+    <!-- <nav aria-label="Page navigation example">
       <ul class="pagination">
         <li 
           class="page-item"
@@ -86,7 +86,9 @@
             </a>
         </li>
       </ul>
-    </nav>
+    </nav> -->
+
+    <Pagination :pages="pagination" @emitPages="getProducts"></Pagination>
 
 
     <!-- Modal -->
@@ -263,6 +265,7 @@
 
 <script>
 import $ from 'jquery';
+import Pagination from '../Pagination';
 
 export default {
   data() {
@@ -277,6 +280,9 @@ export default {
       },
       pagination:{},
     };
+  },
+  components: {
+    Pagination,
   },
   methods: {
     getProducts(page = 1) {                         //給予page 預設值是 1   如果有代數值就使用自代數值 , 沒有則帶入第一頁
