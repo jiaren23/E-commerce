@@ -4,6 +4,8 @@ import VueAxios from 'vue-axios';
 import 'bootstrap';
 import Loading from 'vue-loading-overlay';  // Import component
 import 'vue-loading-overlay/dist/vue-loading.css';  // Import stylesheet
+import VeeValidate from 'vee-validate';
+import zhTWValidate from 'vee-validate/dist/locale/zh_TW';
 
 
 import App from './App';
@@ -19,6 +21,9 @@ Vue.component('Loading' , Loading); // 使用全域方式啟用 (這樣在每個
 Vue.filter('currency',currencyFilter);
 Vue.filter('date', dateFilter);
 
+VeeValidate.Validator.localize('zh_TW', zhTWValidate);
+Vue.use(VeeValidate);
+
 axios.defaults.withCredentials = true;
 
 /* eslint-disable no-new */
@@ -27,7 +32,7 @@ new Vue({
   router,
   components: { App },
   template: '<App/>'
-})
+ })
 
 router.beforeEach((to, from, next) => {          // 加入導航守衛 beforeEach 判別我們在那些頁面是需要登入 那些頁面是不需要登入的
   console.log('to',to,'from',from,'next',next);
